@@ -13,6 +13,7 @@ namespace PersianBingCalendar
         {
             try
             {
+                RunOnWindowsStartup.Do();
                 TaskRunner.CreateOrUpdateTask();
                 TaskRunner.RunTask();
             }

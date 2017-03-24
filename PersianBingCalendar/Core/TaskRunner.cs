@@ -13,17 +13,24 @@ namespace PersianBingCalendar.Core
             const string description = "PersianBingCalendar Runner";
             var execAction = new ExecAction(Application.ExecutablePath, null, Application.StartupPath);
 
-            using (var ts = new TaskService())
+            if (updateTask(description, execAction))
             {
-                var task = ts.GetTask(description);
-                if (task != null)
-                {
-                    task.Definition.Actions[0] = execAction;
-                    task.RegisterChanges();
-                    return;
-                }
+                return;
             }
 
+            addNewTask(description, execAction);
+            Console.WriteLine($"`{description}` task has been added.");
+        }
+
+        public static void RunTask()
+        {
+            File.WriteAllText(Path.Combine(DirUtils.GetAppPath(), "last-run.log"), string.Format("{0}{1}{1}", DateTime.Now, Environment.NewLine));
+            BingImagesDownloader.DownloadTodayBingImages();
+            BingWallpaper.SetTodayWallpapaer();
+        }
+
+        private static void addNewTask(string description, ExecAction execAction)
+        {
             using (var task = TaskService.Instance.NewTask())
             {
                 task.RegistrationInfo.Description = description;
@@ -35,22 +42,8 @@ namespace PersianBingCalendar.Core
                 task.Settings.StartWhenAvailable = true;
                 task.Settings.MultipleInstances = TaskInstancesPolicy.Parallel;
 
-                var now = DateTime.Now;
-                task.Triggers.Add(new DailyTrigger
-                {
-                    // set start date and time to be in future (near future, just 1 minute), then task will be triggered and will repeat at specific interval
-                    StartBoundary = now.AddMinutes(1),
-                    Repetition =
-                    {
-                        Interval = TimeSpan.FromHours(1),
-                        StopAtDurationEnd = false
-                    },
-                    Enabled = true
-                });
-
-                var tomorrow = now.AddDays(1);
-                var startOfADay = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 0, 0, 1);
-                task.Triggers.Add(new TimeTrigger(startOfADay));
+                task.Triggers.Add(createDailyTrigger());
+                task.Triggers.Add(createOneTimeTrigger());
 
                 task.Actions.Add(execAction);
                 TaskService.Instance.RootFolder.RegisterTaskDefinition(
@@ -62,15 +55,44 @@ namespace PersianBingCalendar.Core
                     TaskLogonType.InteractiveToken,
                     null);
             }
-
-            Console.WriteLine($"`{description}` task has been added.");
         }
 
-        public static void RunTask()
+        private static DailyTrigger createDailyTrigger()
         {
-            File.WriteAllText(Path.Combine(DirUtils.GetAppPath(), "last-run.log"), string.Format("{0}{1}{1}", DateTime.Now, Environment.NewLine));
-            BingImagesDownloader.DownloadTodayBingImages();
-            BingWallpaper.SetTodayWallpapaer();
+            return new DailyTrigger
+            {
+                // set start date and time to be in future (near future, just 1 minute), then task will be triggered and will repeat at specific interval
+                StartBoundary = DateTime.Now.AddMinutes(1),
+                Repetition =
+                {
+                    Interval = TimeSpan.FromHours(1),
+                    StopAtDurationEnd = false
+                },
+                Enabled = true
+            };
+        }
+
+        private static TimeTrigger createOneTimeTrigger()
+        {
+            var tomorrow = DateTime.Now.AddDays(1);
+            var startOfADay = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 0, 0, 1);
+            return new TimeTrigger(startOfADay);
+        }
+
+        private static bool updateTask(string description, ExecAction execAction)
+        {
+            using (var ts = new TaskService())
+            {
+                var task = ts.GetTask(description);
+                if (task != null)
+                {
+                    task.Definition.Actions[0] = execAction;
+                    task.Definition.Triggers[1] = createOneTimeTrigger();
+                    task.RegisterChanges();
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
