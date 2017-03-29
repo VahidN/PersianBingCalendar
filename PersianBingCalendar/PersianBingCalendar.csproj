@@ -59,6 +59,7 @@
     <Compile Include="Models\LastDownalodResult.cs" />
     <Compile Include="Utils\DrawingExtensions.cs" />
     <Compile Include="Utils\DirUtils.cs" />
+    <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\MyWebClient.cs">
       <SubType>Component</SubType>
     </Compile>

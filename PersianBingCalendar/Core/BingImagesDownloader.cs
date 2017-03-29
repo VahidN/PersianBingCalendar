@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using PersianBingCalendar.Models;
 using PersianBingCalendar.Utils;
@@ -28,9 +29,13 @@ namespace PersianBingCalendar.Core
                         };
                     });
                 }
+                catch(WebException ex)
+                {
+                    Console.WriteLine(ex);
+                }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    ex.LogException();
                 }
             });
         }

@@ -14,17 +14,33 @@ namespace PersianBingCalendar.Core
             var execAction = new ExecAction(Application.ExecutablePath, null, Application.StartupPath);
             using (var task = TaskService.Instance.NewTask())
             {
+                var isVesrion2 = TaskService.Instance.HighestSupportedVersion >= new Version(1, 2);
+
                 task.RegistrationInfo.Description = description;
                 task.RegistrationInfo.Author = "DNT";
                 task.Settings.Hidden = true; // Project -> Properties -> Application tab -> Output type -> `Windows Application`
                 task.Settings.Enabled = true;
                 task.Settings.DisallowStartIfOnBatteries = false;
                 task.Settings.StopIfGoingOnBatteries = false;
-                task.Settings.StartWhenAvailable = true;
-                task.Settings.MultipleInstances = TaskInstancesPolicy.IgnoreNew;
+                if (isVesrion2)
+                {
+                    task.Settings.StartWhenAvailable = true;
+                    task.Settings.MultipleInstances = TaskInstancesPolicy.IgnoreNew;
+                }
 
-                task.Triggers.Add(createHourlyTrigger());
-                task.Triggers.Add(createDailyStartTrigger());
+                var trigger1 = createHourlyTrigger();
+                if (!isVesrion2)
+                {
+                    trigger1.Repetition.Duration = TimeSpan.FromHours(1.1);
+                }
+                task.Triggers.Add(trigger1);
+
+                var trigger2 = createDailyStartTrigger();
+                if (!isVesrion2)
+                {
+                    trigger2.Repetition.Duration = TimeSpan.FromHours(1.1);
+                }
+                task.Triggers.Add(trigger2);
 
                 task.Actions.Add(execAction);
                 TaskService.Instance.RootFolder.RegisterTaskDefinition(

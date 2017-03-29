@@ -24,23 +24,19 @@ namespace PersianBingCalendar.Core
         private Color _avgColor;
         private int _cellHeight;
         private int _cellWidth;
-        private bool _disposed = false;
+        private bool _disposed;
         private Color _holidayColor;
         private int _leftMargin;
         private IList<Point> _points;
         private int _topMargin;
-        private readonly Font _calendarFont;
 
-
-        public PersianCalendarRenderer(string imageFileName, string calendarFontFileName, int calendarFontSize)
+        public PersianCalendarRenderer(string imageFileName)
         {
             PersianDateHelper.GregorianToPersianDate(
                 DateTime.Now.Year,
                 DateTime.Now.Month,
                 DateTime.Now.Day,
                 out _year, out _month, out _day);
-
-            _calendarFont = getFont(calendarFontFileName, calendarFontSize);
 
             _image = Image.FromFile(imageFileName);
             _graphics = Graphics.FromImage(_image);
@@ -50,6 +46,10 @@ namespace PersianBingCalendar.Core
             _graphics.InterpolationMode = InterpolationMode.High;
             _graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
         }
+
+        public string CalendarFontFileName { set; get; }
+
+        public int CalendarFontSize { set; get; }
 
         public string CopyrightFontName { set; get; }
 
@@ -85,7 +85,6 @@ namespace PersianBingCalendar.Core
             if (_disposed) return;
             if (!disposeManagedResources) return;
 
-            _calendarFont?.Dispose();
             _graphics?.Dispose();
             _disposed = true;
         }
@@ -195,10 +194,9 @@ namespace PersianBingCalendar.Core
             }
         }
 
-        private Font getFont(string calendarFontFileName, int calendarFontSize)
+        private string getFontPath()
         {
-            var fontPath = Path.Combine(DirUtils.GetAppPath(), "fonts", calendarFontFileName);
-            return DrawingExtensions.GetPrivateFont(calendarFontSize, FontStyle.Regular, fontPath);
+            return Path.Combine(DirUtils.GetAppPath(), "fonts", CalendarFontFileName);
         }
 
         private string getHeaderText()
@@ -218,13 +216,10 @@ namespace PersianBingCalendar.Core
 
             foreach (var weekDay in PersianCalendarNames.DaysOfWeek)
             {
-                sizes.Add(DrawingExtensions.MeasureString(weekDay, _calendarFont));
+                sizes.Add(measureString(weekDay));
             }
 
-            for (var i = 1; i <= 31; i++)
-            {
-                sizes.Add(DrawingExtensions.MeasureString(i.ToString(), _calendarFont));
-            }
+            sizes.Add(measureString("31"));
 
             var maxHeight = sizes.Select(x => x.Height).Max();
             var maxWidth = sizes.Select(x => x.Width).Max();
@@ -232,6 +227,11 @@ namespace PersianBingCalendar.Core
             return new SizeF(maxWidth + margin, maxHeight + margin);
         }
 
+        private SizeF measureString(string text)
+        {
+            var fontPath = getFontPath();
+            return DrawingExtensions.MeasureString(text, CalendarFontSize, FontStyle.Regular, fontPath);
+        }
         private void printCopyright()
         {
             SizeF copyrightSize;
@@ -248,7 +248,7 @@ namespace PersianBingCalendar.Core
         {
             var headerText = getHeaderText();
 
-            var size = DrawingExtensions.MeasureString(headerText, _calendarFont);
+            var size = measureString(headerText);
             _topMargin = (int)size.Height + 100;
 
             var printHeaderTextPoint = new Point(_leftMargin, _topMargin - _cellHeight);
@@ -258,11 +258,11 @@ namespace PersianBingCalendar.Core
         private void printHolidayTexts(IList<HolidayItem> items, Point lastPoint)
         {
             var space = 2;
-            var dayTextSize = DrawingExtensions.MeasureString("31", _calendarFont).Width;
+            var dayTextSize = measureString("31").Width;
 
             foreach (var item in items)
             {
-                var size = DrawingExtensions.MeasureString(item.Text, _calendarFont).Width;
+                var size = measureString(item.Text).Width;
 
                 var dayLeftMargin = (int)(_image.Width - (RightMargin + dayTextSize + 5));
                 var textPoint = new Point(dayLeftMargin, lastPoint.Y + space * _cellHeight);
@@ -285,7 +285,7 @@ namespace PersianBingCalendar.Core
 
             var cellHeight = _cellHeight;
 
-            var textHeight = DrawingExtensions.MeasureString(dayText, _calendarFont).Height;
+            var textHeight = measureString(dayText).Height;
 
             if (textHeight > cellHeight)
             {
@@ -315,8 +315,18 @@ namespace PersianBingCalendar.Core
 
             _graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
             var textColor = color.Brightness() < 140 ? Color.White : Color.Black;
-            _graphics.DrawString(dayText, _calendarFont, new SolidBrush(textColor), rectangle, stringFormat);
 
+            using (var privateFontCollection = new PrivateFontCollection())
+            {
+                privateFontCollection.AddFontFile(getFontPath());
+                using (var fontFamily = privateFontCollection.Families[0])
+                {
+                    using (var calendarFont = new Font(fontFamily, CalendarFontSize, FontStyle.Regular, GraphicsUnit.Pixel))
+                    {
+                        _graphics.DrawString(dayText, calendarFont, new SolidBrush(textColor), rectangle, stringFormat);
+                    }
+                }
+            }
         }
 
         private void setColors()

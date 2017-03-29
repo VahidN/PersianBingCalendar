@@ -21,21 +21,22 @@ namespace PersianBingCalendar.Core
                 return;
             }
 
-            using (var renderer = new PersianCalendarRenderer(
-                imageFileName: imagePath, calendarFontFileName: "irsans.ttf", calendarFontSize: 23)
+            using (var renderer = new PersianCalendarRenderer(imageFileName: imagePath)
             {
                 Holidays = HolidaysReader.GetHolidays(),
                 CopyrightText = lastDownalodResult.Copyright,
                 TodayColor = Color.DarkRed,
                 CopyrightFontName = "Tahoma",
-                CopyrightFontSize = 19
+                CopyrightFontSize = 19,
+                CalendarFontFileName= "irsans.ttf",
+                CalendarFontSize= 23
             })
             {
                 using (var bitmap = renderer.DrawThisMonthsCalendar())
                 {
-                    const string wallpaperFileName = "_wallpaper.png";
+                    const string wallpaperFileName = "_wallpaper.bmp";
                     var wallpaper = Path.Combine(dir, wallpaperFileName);
-                    bitmap.Save(wallpaper, ImageFormat.Png);
+                    bitmap.Save(wallpaper, ImageFormat.Bmp);
 
                     NativeMethods.SetWallpaper(wallpaper);
                     NativeMethods.SetLockScreenImage(wallpaper);

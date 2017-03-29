@@ -158,5 +158,26 @@ namespace PersianBingCalendar.Utils
                 }
             }
         }
+
+        public static SizeF MeasureString(string text, int fontSize, FontStyle fontStyle, string path)
+        {
+            using (var bmp = new Bitmap(1, 1))
+            {
+                using (var g = Graphics.FromImage(bmp))
+                {
+                    using (var privateFontCollection = new PrivateFontCollection())
+                    {
+                        privateFontCollection.AddFontFile(path);
+                        using (var fontFamily = privateFontCollection.Families[0])
+                        {
+                            using (var font = new Font(fontFamily, fontSize, fontStyle, GraphicsUnit.Pixel))
+                            {
+                                return g.MeasureString(text, font);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
