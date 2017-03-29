@@ -38,6 +38,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -57,6 +58,7 @@
     <Compile Include="Models\HolidayItem.cs" />
     <Compile Include="Models\ImageInfo.cs" />
     <Compile Include="Models\LastDownalodResult.cs" />
+    <Compile Include="Utils\ConfigSetGet.cs" />
     <Compile Include="Utils\DrawingExtensions.cs" />
     <Compile Include="Utils\DirUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Utils\Numbers.cs" />
     <Compile Include="Utils\PersianDateHelper.cs" />
     <Compile Include="Utils\RunOnWindowsStartup.cs" />
+    <Compile Include="Utils\WindowsVersion.cs" />
     <Compile Include="Utils\XmlUtils.cs" />
   </ItemGroup>
   <ItemGroup>

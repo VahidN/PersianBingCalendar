@@ -13,7 +13,7 @@ namespace PersianBingCalendar.Core
         public static void SetTodayWallpapaer()
         {
             var dir = DirUtils.GetImagesDir();
-            var lastDownalodResult = getLastImage(dir);
+            var lastDownalodResult = getImage(dir);
             var imagePath = lastDownalodResult?.ImageFileName;
             if (string.IsNullOrWhiteSpace(imagePath) || !File.Exists(imagePath))
             {
@@ -34,9 +34,19 @@ namespace PersianBingCalendar.Core
             {
                 using (var bitmap = renderer.DrawThisMonthsCalendar())
                 {
-                    const string wallpaperFileName = "_wallpaper.bmp";
-                    var wallpaper = Path.Combine(dir, wallpaperFileName);
-                    bitmap.Save(wallpaper, ImageFormat.Bmp);
+                    string wallpaper;
+                    if (WindowsVersion.IsWindows8Plus)
+                    {
+                        const string wallpaperFileName = "_wallpaper.png";
+                        wallpaper = Path.Combine(dir, wallpaperFileName);
+                        bitmap.Save(wallpaper, ImageFormat.Png);
+                    }
+                    else
+                    {
+                        const string wallpaperFileName = "_wallpaper.bmp";
+                        wallpaper = Path.Combine(dir, wallpaperFileName);
+                        bitmap.Save(wallpaper, ImageFormat.Bmp);
+                    }
 
                     NativeMethods.SetWallpaper(wallpaper);
                     NativeMethods.SetLockScreenImage(wallpaper);
@@ -44,7 +54,7 @@ namespace PersianBingCalendar.Core
             }
         }
 
-        private static LastDownalodResult getLastImage(string dir)
+        private static LastDownalodResult getImage(string dir)
         {
             var images = new DirectoryInfo(dir).GetFiles("*.jpg");
             if (!images.Any())
@@ -52,10 +62,21 @@ namespace PersianBingCalendar.Core
                 return null;
             }
 
-            var lastImage = images.OrderByDescending(fileInfo => fileInfo.LastWriteTime).FirstOrDefault();
-            if (lastImage == null)
+            FileInfo lastImage;
+            var useRandomImages = ConfigSetGet.GetConfigData("UseRandomImages");
+            if (!string.IsNullOrWhiteSpace(useRandomImages) &&
+                useRandomImages.Equals("true", StringComparison.InvariantCultureIgnoreCase))
             {
-                return null;
+                var rnd = new Random();
+                lastImage = images[rnd.Next(0, images.Length - 1)];
+            }
+            else
+            {
+                lastImage = images.OrderByDescending(fileInfo => fileInfo.LastWriteTime).FirstOrDefault();
+                if (lastImage == null)
+                {
+                    return null;
+                }
             }
 
             var image = lastImage.FullName;
