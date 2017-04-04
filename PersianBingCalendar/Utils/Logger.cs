@@ -9,11 +9,17 @@ namespace PersianBingCalendar.Utils
 
         public static void LogException(this Exception ex)
         {
+            ex?.ToString().LogText();
+        }
+
+        public static void LogText(this string text)
+        {
             lock (_lock)
             {
+                Console.WriteLine(text);
                 File.AppendAllText(
                     Path.Combine(DirUtils.GetAppPath(), "errors.log"),
-                    $"{DateTime.Now}{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}");
+                    $"{DateTime.Now}{Environment.NewLine}{text}{Environment.NewLine}{Environment.NewLine}");
             }
         }
     }

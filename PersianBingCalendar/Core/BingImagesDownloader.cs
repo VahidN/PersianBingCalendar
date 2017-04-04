@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using PersianBingCalendar.Models;
 using PersianBingCalendar.Utils;
@@ -12,8 +11,13 @@ namespace PersianBingCalendar.Core
     {
         public static void DownloadTodayBingImages()
         {
-            var dir = DirUtils.GetImagesDir();
+            if (!NetworkStatus.IsConnectedToInternet())
+            {
+                "The internet connection was not found.".LogText();
+                return;
+            }
 
+            var dir = DirUtils.GetImagesDir();
             Enumerable.Range(start: 0, count: 9).AsParallel().ForAll(imageIndex =>
             {
                 try
@@ -28,10 +32,6 @@ namespace PersianBingCalendar.Core
                             Copyright = bingImage.image.copyright
                         };
                     });
-                }
-                catch(WebException ex)
-                {
-                    Console.WriteLine(ex);
                 }
                 catch (Exception ex)
                 {
@@ -66,13 +66,16 @@ namespace PersianBingCalendar.Core
                 Console.WriteLine($"Already have it: {xmlFileName}");
                 return;
             }
-
             File.WriteAllText(xmlFilePath, xmlData);
 
-            using (var webClient = new MyWebClient { Timeout = timeout })
+            try
             {
-                var imageData = webClient.DownloadData(imageInfo.Url);
-                File.WriteAllBytes(imagePath, imageData);
+                Downloader.DownloadFile(imageInfo.Url, imagePath);
+            }
+            catch (Exception ex)
+            {
+                ex.LogException();
+                File.Delete(imagePath);
             }
         }
     }

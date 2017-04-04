@@ -18,7 +18,6 @@ namespace PersianBingCalendar
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
                 ex.LogException();
             }
         }

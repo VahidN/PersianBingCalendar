@@ -42,10 +42,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -59,12 +55,14 @@
     <Compile Include="Models\ImageInfo.cs" />
     <Compile Include="Models\LastDownalodResult.cs" />
     <Compile Include="Utils\ConfigSetGet.cs" />
+    <Compile Include="Utils\Downloader.cs" />
     <Compile Include="Utils\DrawingExtensions.cs" />
     <Compile Include="Utils\DirUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\MyWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Utils\NetworkStatus.cs" />
     <Compile Include="Utils\PersianCalendarNames.cs" />
     <Compile Include="Utils\NativeMethods.cs" />
     <Compile Include="Program.cs" />
