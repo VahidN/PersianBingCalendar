@@ -22,11 +22,11 @@ namespace PersianBingCalendar.Core
         private readonly int _month;
         private readonly int _year;
         private Color _avgColor;
-        private int _cellHeight;
-        private int _cellWidth;
         private bool _disposed;
         private Color _holidayColor;
         private int _leftMargin;
+        private int _maxCellHeight;
+        private int _maxCellWidth;
         private IList<Point> _points;
         private int _topMargin;
 
@@ -60,6 +60,8 @@ namespace PersianBingCalendar.Core
         public IList<HolidayItem> Holidays { set; get; }
 
         public int HolidaysFontSize { set; get; }
+
+        public bool ShowPastHolidays { set; get; }
 
         public Color TodayColor { set; get; }
 
@@ -98,8 +100,8 @@ namespace PersianBingCalendar.Core
             {
                 for (var col = 0; col < 7; col++)
                 {
-                    var left = _leftMargin + col * _cellWidth;
-                    var top = _topMargin + row * _cellHeight;
+                    var left = _leftMargin + col * _maxCellWidth;
+                    var top = _topMargin + row * _maxCellHeight;
                     var point = new Point(left, top);
 
                     cellUpperLeftPoints.Add(point);
@@ -135,7 +137,7 @@ namespace PersianBingCalendar.Core
             const int first2Rows = oneRowItems + oneRowItems;
             var otherMonthPoints = _points.Skip(first2Rows).ToList();
             var rowCount = 0;
-            var lastPoint = new Point(_leftMargin, _topMargin + 7 * _cellHeight);
+            var lastPoint = new Point(_leftMargin, _topMargin + 7 * _maxCellHeight);
             while (curDay <= noOfDays)
             {
                 var rtlPointsToShow = otherMonthPoints.Skip(rowCount).Take(oneRowItems).Reverse();
@@ -170,7 +172,7 @@ namespace PersianBingCalendar.Core
                     fillColor = _holidayColor;
                 }
 
-                if (AppConfig.ShowPastHolidays || curDay >= _day)
+                if (ShowPastHolidays || curDay >= _day)
                 {
                     holidayItem.IsToday = _day == curDay;
                     holidayItems.Add(holidayItem);
@@ -183,7 +185,7 @@ namespace PersianBingCalendar.Core
             }
 
             var dayText = curDay.ToString(CultureInfo.InvariantCulture).ToPersianNumbers();
-            printPoint(point, dayText, _cellWidth, CalendarFontSize, fillColor);
+            printPoint(point, dayText, _maxCellWidth, CalendarFontSize, fillColor);
         }
 
         private void drawDaysOfWeek()
@@ -192,7 +194,7 @@ namespace PersianBingCalendar.Core
             {
                 var dayOfWeekAbbreviation = PersianCalendarNames.DaysOfWeek[6 - i];
                 var point = _points[i];
-                printPoint(point, dayOfWeekAbbreviation, _cellWidth, CalendarFontSize, null, applyDarkerColor: true);
+                printPoint(point, dayOfWeekAbbreviation, _maxCellWidth, CalendarFontSize, null, applyDarkerColor: true);
             }
         }
 
@@ -241,7 +243,7 @@ namespace PersianBingCalendar.Core
             {
                 var copyrightSize = DrawingExtensions.MeasureString(CopyrightText, font);
                 var copyrightLeftMargin = (int)(_image.Width - (BingLogoRightMargin + copyrightSize.Width + 5));
-                printPoint(new Point(copyrightLeftMargin, _image.Height - 120), CopyrightText, (int)copyrightSize.Width + 20, CopyrightFontSize, null, isRtl: false, font: font);
+                printPoint(new Point(copyrightLeftMargin, _image.Height - 120), CopyrightText, (int)copyrightSize.Width + 20, CopyrightFontSize, null, isRtl: false, customFont: font);
             }
         }
 
@@ -252,8 +254,8 @@ namespace PersianBingCalendar.Core
             var size = measureString(headerText, CalendarFontSize);
             _topMargin = (int)size.Height + 100;
 
-            var printHeaderTextPoint = new Point(_leftMargin, _topMargin - _cellHeight);
-            printPoint(printHeaderTextPoint, headerText, 7 * _cellWidth, CalendarFontSize);
+            var printHeaderTextPoint = new Point(_leftMargin, _topMargin - _maxCellHeight);
+            printPoint(printHeaderTextPoint, headerText, 7 * _maxCellWidth, CalendarFontSize);
         }
 
         private void printHolidayTexts(IList<HolidayItem> items, Point lastPoint)
@@ -266,11 +268,11 @@ namespace PersianBingCalendar.Core
                 var size = measureString(item.Text, HolidaysFontSize).Width;
 
                 var dayLeftMargin = (int)(_image.Width - (RightMargin + dayTextSize + 5));
-                var textPoint = new Point(dayLeftMargin, lastPoint.Y + space * _cellHeight);
+                var textPoint = new Point(dayLeftMargin, lastPoint.Y + space * _maxCellHeight);
                 printPoint(textPoint, item.Day.ToString(), (int)dayTextSize + 5, HolidaysFontSize, item.IsToday ? TodayColor : _holidayColor);
 
                 var textLeftMargin = (int)(_image.Width - (RightMargin + size + dayTextSize + 10));
-                textPoint = new Point(textLeftMargin, lastPoint.Y + space * _cellHeight);
+                textPoint = new Point(textLeftMargin, lastPoint.Y + space * _maxCellHeight);
                 printPoint(textPoint, item.Text, (int)size + 5, HolidaysFontSize, item.IsToday ? TodayColor : _holidayColor);
 
                 space++;
@@ -278,20 +280,17 @@ namespace PersianBingCalendar.Core
         }
 
         private void printPoint(
-            Point point, string dayText, int cellWidth, int calendarFontSize, Color? fillColor = null,
-            bool isRtl = true, bool applyDarkerColor = false, Font font = null)
+            Point point, string text, int cellWidth, int fontSize, Color? fillColor = null,
+            bool isRtl = true, bool applyDarkerColor = false, Font customFont = null)
         {
             var pointX = point.X;
             var pointY = point.Y;
 
-            var cellHeight = _cellHeight;
-
-            var textHeight = measureString(dayText, calendarFontSize).Height;
-
-            if (textHeight > cellHeight)
+            var textHeight = customFont == null ? measureString(text, fontSize).Height : DrawingExtensions.MeasureString(text, customFont).Height;
+            var cellHeight = (int)textHeight + 15;
+            if (textHeight > _maxCellHeight)
             {
-                cellHeight = (int)textHeight + 20;
-                pointY -= cellHeight - _cellHeight;
+                pointY -= cellHeight - _maxCellHeight;
             }
 
             var color = fillColor == null ?
@@ -317,9 +316,9 @@ namespace PersianBingCalendar.Core
             _graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
             var textColor = color.Brightness() < 140 ? Color.White : Color.Black;
 
-            if (font != null)
+            if (customFont != null)
             {
-                _graphics.DrawString(dayText, font, new SolidBrush(textColor), rectangle, stringFormat);
+                _graphics.DrawString(text, customFont, new SolidBrush(textColor), rectangle, stringFormat);
             }
             else
             {
@@ -328,10 +327,10 @@ namespace PersianBingCalendar.Core
                     privateFontCollection.AddFontFile(getFontPath());
                     using (var fontFamily = privateFontCollection.Families[0])
                     {
-                        using (var calendarFont = new Font(fontFamily, calendarFontSize, FontStyle.Regular,
+                        using (var calendarFont = new Font(fontFamily, fontSize, FontStyle.Regular,
                             GraphicsUnit.Pixel))
                         {
-                            _graphics.DrawString(dayText, calendarFont, new SolidBrush(textColor), rectangle,
+                            _graphics.DrawString(text, calendarFont, new SolidBrush(textColor), rectangle,
                                 stringFormat);
                         }
                     }
@@ -341,16 +340,17 @@ namespace PersianBingCalendar.Core
 
         private void setColors()
         {
-            _avgColor = _image.CropImage(new Rectangle(_leftMargin - RightMargin, 0, _image.Width, _image.Height)).CalculateAverageColor();
+            _avgColor = _image.CropImage(new Rectangle(_leftMargin - RightMargin, 0, _image.Width, _image.Height))
+                              .CalculateAverageColor();
             _holidayColor = _avgColor.ChangeColorBrightness(-0.7f);
         }
 
         private void setSizes()
         {
             var cellSize = getMaxCellSize(CellMargin);
-            _cellHeight = (int)cellSize.Height;
-            _cellWidth = (int)cellSize.Width;
-            _leftMargin = _image.Width - (RightMargin + (7 * _cellWidth));
+            _maxCellHeight = (int)cellSize.Height;
+            _maxCellWidth = (int)cellSize.Width;
+            _leftMargin = _image.Width - (RightMargin + (7 * _maxCellWidth));
         }
     }
 }
