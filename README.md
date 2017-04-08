@@ -19,3 +19,12 @@ PersianBingCalendar
 ![PersianBingCalendarTask](/PersianBingCalendar/Images/task.png)
 
 آخرین نگارش این برنامه را از [قسمت releases](https://github.com/VahidN/PersianBingCalendar/releases) می‌توانید دریافت کنید.
+
+
+نكات و تنظيمات
+--------
+**تنظیمات تاریخ قمری در ویندوز**
+
+![ghamari](/PersianBingCalendar/Images/ghamari2.png)
+همانطور که در اینجا مشاهده می‌کنید، اگر به کنترل پنل، قسمت Region آن مراجعه کرده و در برگه‌ی باز شده، بر روی دکمه‌ی additional settings کلیک کنیم، امکان انتخاب تاریخ قمری هم وجود دارد و در اینجا به ازای روز جاری، 5 روز و تاریخ مختلف را می‌توان انتخاب کرد (بسته به موقعیت جغرافیایی).
+پس از این تنظیم است که برنامه، تاریخ روز جاری را به قمری به نحو صحیحی نمایش می‌دهد. 
