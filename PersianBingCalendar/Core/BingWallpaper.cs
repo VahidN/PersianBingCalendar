@@ -26,10 +26,11 @@ namespace PersianBingCalendar.Core
                 Holidays = HolidaysReader.GetHolidays(),
                 CopyrightText = lastDownalodResult.Copyright,
                 TodayColor = Color.DarkRed,
-                CopyrightFontName = "Tahoma",
-                CopyrightFontSize = 19,
-                CalendarFontFileName= "irsans.ttf",
-                CalendarFontSize= 23
+                CopyrightFontName = AppConfig.CopyrightFontName,
+                CopyrightFontSize = AppConfig.CopyrightFontSize,
+                CalendarFontFileName= AppConfig.CalendarFontFileName,
+                CalendarFontSize= AppConfig.CalendarFontSize,
+                HolidaysFontSize = AppConfig.HolidaysFontSize
             })
             {
                 using (var bitmap = renderer.DrawThisMonthsCalendar())
@@ -63,9 +64,7 @@ namespace PersianBingCalendar.Core
             }
 
             FileInfo lastImage;
-            var useRandomImages = ConfigSetGet.GetConfigData("UseRandomImages");
-            if (!string.IsNullOrWhiteSpace(useRandomImages) &&
-                useRandomImages.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+            if (AppConfig.UseRandomImages)
             {
                 var rnd = new Random();
                 lastImage = images[rnd.Next(0, images.Length - 1)];
