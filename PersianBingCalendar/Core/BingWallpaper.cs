@@ -85,7 +85,7 @@ namespace PersianBingCalendar.Core
 
             if (!File.Exists(xmlFile))
             {
-                xmlFile = $"{image.Split('_').First()}.xml";
+                xmlFile = $"{Path.GetFileName(image).Split('_').First()}.xml";
             }
 
             if (File.Exists(xmlFile))
