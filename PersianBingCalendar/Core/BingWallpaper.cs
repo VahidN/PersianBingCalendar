@@ -28,8 +28,8 @@ namespace PersianBingCalendar.Core
                 TodayColor = Color.DarkRed,
                 CopyrightFontName = AppConfig.CopyrightFontName,
                 CopyrightFontSize = AppConfig.CopyrightFontSize,
-                CalendarFontFileName= AppConfig.CalendarFontFileName,
-                CalendarFontSize= AppConfig.CalendarFontSize,
+                CalendarFontFileName = AppConfig.CalendarFontFileName,
+                CalendarFontSize = AppConfig.CalendarFontSize,
                 HolidaysFontSize = AppConfig.HolidaysFontSize,
                 ShowPastHolidays = AppConfig.ShowPastHolidays
             })
@@ -85,7 +85,7 @@ namespace PersianBingCalendar.Core
 
             if (!File.Exists(xmlFile))
             {
-                xmlFile = $"{Path.GetFileName(image).Split('_').First()}.xml";
+                xmlFile = Path.Combine(Path.GetDirectoryName(image), $"{Path.GetFileName(image).Split('_').First()}.xml");
             }
 
             if (File.Exists(xmlFile))
