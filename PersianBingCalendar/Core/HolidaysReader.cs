@@ -26,7 +26,7 @@ namespace PersianBingCalendar.Core
                     continue;
                 }
 
-                var items = line.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                var items = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 if (items.Length < 2)
                 {
                     continue;
