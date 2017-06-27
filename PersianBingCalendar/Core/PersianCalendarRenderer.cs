@@ -14,7 +14,9 @@ namespace PersianBingCalendar.Core
     public class PersianCalendarRenderer : IDisposable
     {
         private const int BingLogoRightMargin = 246;
+        private const int BrightnessThreshold = 130;
         private const int CellMargin = 15;
+        private const string LargestDayStringInMonth = "31";
         private const int RightMargin = 100;
         private readonly int _day;
         private readonly Graphics _graphics;
@@ -223,7 +225,7 @@ namespace PersianBingCalendar.Core
                 sizes.Add(measureString(weekDay, CalendarFontSize));
             }
 
-            sizes.Add(measureString("31", CalendarFontSize));
+            sizes.Add(measureString(LargestDayStringInMonth, CalendarFontSize));
 
             var maxHeight = sizes.Select(x => x.Height).Max();
             var maxWidth = sizes.Select(x => x.Width).Max();
@@ -261,7 +263,7 @@ namespace PersianBingCalendar.Core
         private void printHolidayTexts(IList<HolidayItem> items, Point lastPoint)
         {
             var space = 2;
-            var dayTextSize = measureString("31", HolidaysFontSize).Width;
+            var dayTextSize = measureString(LargestDayStringInMonth, HolidaysFontSize).Width;
 
             foreach (var item in items)
             {
@@ -293,9 +295,7 @@ namespace PersianBingCalendar.Core
                 pointY -= cellHeight - _maxCellHeight;
             }
 
-            var color = fillColor == null ?
-                Color.FromArgb(alpha: 190, baseColor: _avgColor) :
-                Color.FromArgb(alpha: 110, baseColor: fillColor.Value);
+            var color = fillColor == null ? _avgColor : Color.FromArgb(alpha: 110, baseColor: fillColor.Value);
 
             if (applyDarkerColor)
             {
@@ -310,11 +310,10 @@ namespace PersianBingCalendar.Core
                 LineAlignment = StringAlignment.Center,
                 Alignment = StringAlignment.Center,
                 FormatFlags = isRtl ? StringFormatFlags.DirectionRightToLeft : StringFormatFlags.NoClip
-
             };
 
             _graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
-            var textColor = color.Brightness() < 140 ? Color.White : Color.Black;
+            var textColor = color.Brightness() < BrightnessThreshold ? Color.White : Color.Black;
 
             if (customFont != null)
             {
@@ -338,10 +337,20 @@ namespace PersianBingCalendar.Core
             }
         }
 
+        private void setAvgColor()
+        {
+            _avgColor = _image.CropImage(new Rectangle(_leftMargin - RightMargin, 0, _image.Width, _image.Height / 2))
+                              .CalculateAverageColor();
+            _avgColor = Color.FromArgb(alpha: 190, baseColor: _avgColor);
+            while (_avgColor.Brightness() >= BrightnessThreshold)
+            {
+                _avgColor = _avgColor.ChangeColorBrightness(-0.01f);
+            }
+        }
+
         private void setColors()
         {
-            _avgColor = _image.CropImage(new Rectangle(_leftMargin - RightMargin, 0, _image.Width, _image.Height))
-                              .CalculateAverageColor();
+            setAvgColor();
             _holidayColor = _avgColor.ChangeColorBrightness(-0.7f);
         }
 

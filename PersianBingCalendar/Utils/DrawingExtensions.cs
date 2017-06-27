@@ -16,12 +16,23 @@ namespace PersianBingCalendar.Utils
             return Color.FromArgb(r, g, b);
         }
 
+        /// <summary>
+        /// every value in the rage 128-145 will give acceptable results:
+        /// Color textColor = Brightness(backgroundColor) &lt; 130 ? Colors.White : Colors.Black;
+        /// </summary>
         public static int Brightness(this Color c)
         {
             return (int)Math.Sqrt(
                c.R * c.R * .241 +
                c.G * c.G * .691 +
                c.B * c.B * .068);
+        }
+
+        public static bool HasEnoughContrast(Color foreColor, Color backColor, double threshold = 70)
+        {
+            var foreBrightness = Brightness(foreColor);
+            var backBrightness = Brightness(backColor);
+            return Math.Abs(foreBrightness - backBrightness) > threshold;
         }
 
         public static Color CalculateAverageColor(this Bitmap bm)
