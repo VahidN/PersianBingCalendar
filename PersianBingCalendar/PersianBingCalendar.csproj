@@ -52,6 +52,7 @@
     <Compile Include="Core\PersianCalendarRenderer.cs" />
     <Compile Include="Core\TaskRunner.cs" />
     <Compile Include="Models\bing2.cs" />
+    <Compile Include="Models\DayItem.cs" />
     <Compile Include="Models\HolidayItem.cs" />
     <Compile Include="Models\ImageInfo.cs" />
     <Compile Include="Models\LastDownalodResult.cs" />

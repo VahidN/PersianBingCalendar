@@ -17,7 +17,8 @@ namespace PersianBingCalendar.Core
         private const int BrightnessThreshold = 130;
         private const int CellMargin = 15;
         private const string LargestDayStringInMonth = "31";
-        private const int RightMargin = 100;
+        private const int RightMargin = 70;
+        private const int TopHeaderMargin = 20;
         private readonly int _day;
         private readonly Graphics _graphics;
         private readonly Image _image;
@@ -25,6 +26,7 @@ namespace PersianBingCalendar.Core
         private readonly int _year;
         private Color _avgColor;
         private bool _disposed;
+        private Color _headerColor;
         private Color _holidayColor;
         private int _leftMargin;
         private int _maxCellHeight;
@@ -200,15 +202,37 @@ namespace PersianBingCalendar.Core
             }
         }
 
+        private IEnumerable<DayItem> getDayItems()
+        {
+            var arCulture = new CultureInfo("ar-SA")
+            {
+                DateTimeFormat = { Calendar = new HijriCalendar() }
+            };
+            var now = DateTime.Now;
+            return
+                new[]
+                {
+                    new DayItem
+                    {
+                        Day = _day.ToString(),
+                        Text = $"{PersianCalendarNames.MonthNames[_month - 1]} {_year.ToString(CultureInfo.InvariantCulture).ToPersianNumbers()}"
+                    },
+                    new DayItem
+                    {
+                        Day = $"{int.Parse(now.ToString("dd", arCulture))}",
+                        Text = $"{now.ToString("MMMM yyyy", arCulture)}"
+                    },
+                    new DayItem
+                    {
+                        Day = now.Day.ToString(),
+                        Text = $"{now.ToString("yyyy, MMMM", CultureInfo.InvariantCulture)}"
+                    }
+                };
+        }
+
         private string getFontPath()
         {
             return Path.Combine(DirUtils.GetAppPath(), "fonts", CalendarFontFileName);
-        }
-
-        private string getHeaderText()
-        {
-            var todayText = $"{_day} {PersianCalendarNames.MonthNames[_month - 1]} {_year.ToString(CultureInfo.InvariantCulture).ToPersianNumbers()}";
-            return $"{todayText} {Environment.NewLine} {DateTime.Now.ToString("d MMMM yyyy", new CultureInfo("ar-SA") { DateTimeFormat = { Calendar = new HijriCalendar() } })} {Environment.NewLine} {DateTime.Now.ToString("yyyy, d MMMM", CultureInfo.InvariantCulture)}";
         }
 
         private HolidayItem getHolidayItem(int curDay)
@@ -251,13 +275,25 @@ namespace PersianBingCalendar.Core
 
         private void printHeaderText()
         {
-            var headerText = getHeaderText();
+            var top =  _maxCellHeight + TopHeaderMargin;
+            var daySize = _maxCellWidth;
+            var textSize = _maxCellWidth * 6;
+            var space = 0;
 
-            var size = measureString(headerText, CalendarFontSize);
-            _topMargin = (int)size.Height + 100;
+            foreach (var item in getDayItems())
+            {
+                var dayLeftMargin = _image.Width - (RightMargin + daySize);
+                var textPoint = new Point(dayLeftMargin, top + space * _maxCellHeight);
+                printPoint(textPoint, item.Day, daySize, HolidaysFontSize, _headerColor);
 
-            var printHeaderTextPoint = new Point(_leftMargin, _topMargin - _maxCellHeight);
-            printPoint(printHeaderTextPoint, headerText, 7 * _maxCellWidth, CalendarFontSize);
+                var textLeftMargin = _image.Width - (RightMargin + textSize + daySize);
+                textPoint = new Point(textLeftMargin, top + space * _maxCellHeight);
+                printPoint(textPoint, item.Text, textSize, HolidaysFontSize, _headerColor);
+
+                space++;
+            }
+
+            _topMargin = 4 * _maxCellHeight + TopHeaderMargin;
         }
 
         private void printHolidayTexts(IList<HolidayItem> items, Point lastPoint)
@@ -352,6 +388,7 @@ namespace PersianBingCalendar.Core
         {
             setAvgColor();
             _holidayColor = _avgColor.ChangeColorBrightness(-0.7f);
+            _headerColor = _avgColor.ChangeColorBrightness(-0.4f);
         }
 
         private void setSizes()
