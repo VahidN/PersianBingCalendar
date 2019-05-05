@@ -56,6 +56,7 @@ namespace PersianBingCalendar.Core
             var imageInfo = getFullUrl(xmlData);
 
             var imageName = Path.GetFileName(imageInfo.Url).CleanFileName();
+            imageName = imageName.Split('&').First();
             var imagePath = Path.Combine(dir, $"{imageName}");
 
             var xmlFileName = imageName.Split('_').First();
