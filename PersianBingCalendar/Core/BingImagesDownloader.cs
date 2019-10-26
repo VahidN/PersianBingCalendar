@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using PersianBingCalendar.Models;
 using PersianBingCalendar.Utils;
+using System.Net.Http;
 
 namespace PersianBingCalendar.Core
 {
@@ -55,7 +56,7 @@ namespace PersianBingCalendar.Core
 
             var imageInfo = getFullUrl(xmlData);
 
-            var imageName = Path.GetFileName(imageInfo.Url).CleanFileName();
+            var imageName = getImageName(imageInfo);
             var imagePath = Path.Combine(dir, $"{imageName}");
 
             var xmlFileName = imageName.Split('_').First();
@@ -77,6 +78,19 @@ namespace PersianBingCalendar.Core
                 ex.LogException();
                 File.Delete(imagePath);
             }
+        }
+
+        private static string getImageName(ImageInfo imageInfo)
+        {
+            var imageName = Path.GetFileName(imageInfo.Url).CleanFileName();
+            if (imageName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase))
+            {
+                return imageName;
+            }
+
+            var nameValueCollection = new Uri(imageInfo.Url).ParseQueryString();
+            var id = nameValueCollection["id"];
+            return string.IsNullOrWhiteSpace(id) ? imageName : id.CleanFileName();
         }
     }
 }
