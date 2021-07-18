@@ -69,6 +69,8 @@ namespace PersianBingCalendar.Core
 
         public Color TodayColor { set; get; }
 
+        public bool ShowCopyright { set; get; }
+
         public void Dispose()
         {
             Dispose(true);
@@ -265,6 +267,11 @@ namespace PersianBingCalendar.Core
 
         private void printCopyright()
         {
+            if(!ShowCopyright)
+            {
+               return;
+            }
+
             using (var font = new Font(CopyrightFontName, CopyrightFontSize, FontStyle.Regular, GraphicsUnit.Pixel))
             {
                 var copyrightSize = DrawingExtensions.MeasureString(CopyrightText, font);

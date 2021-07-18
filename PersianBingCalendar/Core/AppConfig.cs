@@ -14,6 +14,8 @@ namespace PersianBingCalendar.Core
 
         private static readonly bool _useRandomImages;
 
+        private static readonly bool _showCopyright;
+
         static AppConfig()
         {
             bool.TryParse(ConfigSetGet.GetConfigData("UseRandomImages"), out _useRandomImages);
@@ -23,6 +25,7 @@ namespace PersianBingCalendar.Core
             int.TryParse(ConfigSetGet.GetConfigData("HolidaysFontSize"), out _holidaysFontSize);
             CalendarFontFileName = ConfigSetGet.GetConfigData("CalendarFontFileName");
             CopyrightFontName = ConfigSetGet.GetConfigData("CopyrightFontName");
+            bool.TryParse(ConfigSetGet.GetConfigData("ShowCopyright"), out _showCopyright);
         }
 
         public static string CalendarFontFileName { get; }
@@ -38,5 +41,7 @@ namespace PersianBingCalendar.Core
         public static bool ShowPastHolidays => _showPastHolidays;
 
         public static bool UseRandomImages => _useRandomImages;
+
+        public static bool ShowCopyright => _showCopyright;
     }
 }

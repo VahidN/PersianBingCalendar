@@ -31,7 +31,8 @@ namespace PersianBingCalendar.Core
                 CalendarFontFileName = AppConfig.CalendarFontFileName,
                 CalendarFontSize = AppConfig.CalendarFontSize,
                 HolidaysFontSize = AppConfig.HolidaysFontSize,
-                ShowPastHolidays = AppConfig.ShowPastHolidays
+                ShowPastHolidays = AppConfig.ShowPastHolidays,
+                ShowCopyright = AppConfig.ShowCopyright,
             })
             {
                 using (var bitmap = renderer.DrawThisMonthsCalendar())

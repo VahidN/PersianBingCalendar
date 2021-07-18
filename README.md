@@ -42,3 +42,4 @@ PersianBingCalendar
 | CopyrightFontSize | اندازه فونت کپی رایت |
 | CalendarFontFileName | نام فایل فونت تقویم که در پوشه Fonts برنامه کپی شده‌است. |
 | CopyrightFontName | نام فونت کپی رایت که در سیستم نصب است. |
+| ShowCopyright | اگر به true تنظيم شود،‌ كپي رايت تصوير نيز نمايش داده خواهد شد. |
