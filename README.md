@@ -42,8 +42,8 @@ PersianBingCalendar
 | CopyrightFontSize | اندازه فونت کپی رایت |
 | CalendarFontFileName | نام فایل فونت تقویم که در پوشه Fonts برنامه کپی شده‌است. |
 | CopyrightFontName | نام فونت کپی رایت که در سیستم نصب است. |
-| ShowCopyright | اگر به true تنظيم شود،‌ كپي رايت تصوير نيز نمايش داده خواهد شد. |
+| ShowCopyright | اگر به true تنظیم شود،‌ کپی رایت تصویر نیز نمایش داده خواهد شد. |
 
-**دريافت مناسبت‌هاى به روز شده**
+**دریافت مناسبت‌هاى به روز شده**
 
-همواره آخرين فايل مناسبت‌ها را از اين فايل مي‌توانيد دريافت كنيد: [holidays.csv](https://raw.githubusercontent.com/VahidN/PersianBingCalendar/master/PersianBingCalendar/bin/Release/Data/holidays.csv)
+همواره می‌توانید آخرین فایل مناسبت‌ها را از این آدرس دریافت کنید و سپس آن‌را جایگزین فایل Data\holidays.csv موجود و قدیمی نمائید: [holidays.csv](https://raw.githubusercontent.com/VahidN/PersianBingCalendar/master/PersianBingCalendar/bin/Release/Data/holidays.csv)
