@@ -3,23 +3,22 @@ using System.Runtime.ExceptionServices;
 using PersianBingCalendar.Core;
 using PersianBingCalendar.Utils;
 
-namespace PersianBingCalendar
+namespace PersianBingCalendar;
+
+class Program
 {
-    class Program
-    {
-        [HandleProcessCorruptedStateExceptions]
-        static void Main(string[] args)
-        {
-            try
-            {
-                RunOnWindowsStartup.Do();
-                TaskRunner.CreateOrUpdateTask();
-                TaskRunner.RunTask();
-            }
-            catch (Exception ex)
-            {
-                ex.LogException();
-            }
-        }
-    }
+	[HandleProcessCorruptedStateExceptions]
+	private static void Main(string[] args)
+	{
+		try
+		{
+			RunOnWindowsStartup.Do();
+			TaskRunner.CreateOrUpdateTask();
+			TaskRunner.RunTask();
+		}
+		catch (Exception ex)
+		{
+			ex.LogException();
+		}
+	}
 }
