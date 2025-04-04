@@ -1,430 +1,287 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.CodeDom.Compiler;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Xml.Serialization;
 
-namespace PersianBingCalendar.Models
+namespace PersianBingCalendar.Models;
+
+/// <remarks />
+[GeneratedCode(tool: "xsd", version: "2.0.50727.3038")]
+[Serializable]
+[DebuggerStepThrough]
+[DesignerCategory(category: "code")]
+[XmlType(AnonymousType = true)]
+[XmlRoot(Namespace = "", IsNullable = false)]
+public class images
 {
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false)]
-    public partial class images
-    {
+	private imagesImage imageField;
 
-        private imagesImage imageField;
+	private imagesTooltips tooltipsField;
 
-        private imagesTooltips tooltipsField;
+	/// <remarks />
+	public imagesImage image
+	{
+		get => imageField;
+		set => imageField = value;
+	}
 
-        /// <remarks/>
-        public imagesImage image
-        {
-            get
-            {
-                return this.imageField;
-            }
-            set
-            {
-                this.imageField = value;
-            }
-        }
+	/// <remarks />
+	public imagesTooltips tooltips
+	{
+		get => tooltipsField;
+		set => tooltipsField = value;
+	}
+}
 
-        /// <remarks/>
-        public imagesTooltips tooltips
-        {
-            get
-            {
-                return this.tooltipsField;
-            }
-            set
-            {
-                this.tooltipsField = value;
-            }
-        }
-    }
+/// <remarks />
+[GeneratedCode(tool: "xsd", version: "2.0.50727.3038")]
+[Serializable]
+[DebuggerStepThrough]
+[DesignerCategory(category: "code")]
+[XmlType(AnonymousType = true)]
+public class imagesImage
+{
+	private byte botField;
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlType(AnonymousType = true)]
-    public partial class imagesImage
-    {
+	private string copyrightField;
 
-        private uint startdateField;
+	private string copyrightlinkField;
 
-        private ulong fullstartdateField;
+	private byte drkField;
 
-        private uint enddateField;
+	private uint enddateField;
 
-        private string urlField;
+	private ulong fullstartdateField;
 
-        private string urlBaseField;
+	private object hotspotsField;
 
-        private string copyrightField;
+	private uint startdateField;
 
-        private string copyrightlinkField;
+	private byte topField;
 
-        private byte drkField;
+	private string urlBaseField;
 
-        private byte topField;
+	private string urlField;
 
-        private byte botField;
+	/// <remarks />
+	public uint startdate
+	{
+		get => startdateField;
+		set => startdateField = value;
+	}
 
-        private object hotspotsField;
+	/// <remarks />
+	public ulong fullstartdate
+	{
+		get => fullstartdateField;
+		set => fullstartdateField = value;
+	}
 
-        /// <remarks/>
-        public uint startdate
-        {
-            get
-            {
-                return this.startdateField;
-            }
-            set
-            {
-                this.startdateField = value;
-            }
-        }
+	/// <remarks />
+	public uint enddate
+	{
+		get => enddateField;
+		set => enddateField = value;
+	}
 
-        /// <remarks/>
-        public ulong fullstartdate
-        {
-            get
-            {
-                return this.fullstartdateField;
-            }
-            set
-            {
-                this.fullstartdateField = value;
-            }
-        }
+	/// <remarks />
+	public string url
+	{
+		get => urlField;
+		set => urlField = value;
+	}
 
-        /// <remarks/>
-        public uint enddate
-        {
-            get
-            {
-                return this.enddateField;
-            }
-            set
-            {
-                this.enddateField = value;
-            }
-        }
+	/// <remarks />
+	public string urlBase
+	{
+		get => urlBaseField;
+		set => urlBaseField = value;
+	}
 
-        /// <remarks/>
-        public string url
-        {
-            get
-            {
-                return this.urlField;
-            }
-            set
-            {
-                this.urlField = value;
-            }
-        }
+	/// <remarks />
+	public string copyright
+	{
+		get => copyrightField;
+		set => copyrightField = value;
+	}
 
-        /// <remarks/>
-        public string urlBase
-        {
-            get
-            {
-                return this.urlBaseField;
-            }
-            set
-            {
-                this.urlBaseField = value;
-            }
-        }
+	/// <remarks />
+	public string copyrightlink
+	{
+		get => copyrightlinkField;
+		set => copyrightlinkField = value;
+	}
 
-        /// <remarks/>
-        public string copyright
-        {
-            get
-            {
-                return this.copyrightField;
-            }
-            set
-            {
-                this.copyrightField = value;
-            }
-        }
+	/// <remarks />
+	public byte drk
+	{
+		get => drkField;
+		set => drkField = value;
+	}
 
-        /// <remarks/>
-        public string copyrightlink
-        {
-            get
-            {
-                return this.copyrightlinkField;
-            }
-            set
-            {
-                this.copyrightlinkField = value;
-            }
-        }
+	/// <remarks />
+	public byte top
+	{
+		get => topField;
+		set => topField = value;
+	}
 
-        /// <remarks/>
-        public byte drk
-        {
-            get
-            {
-                return this.drkField;
-            }
-            set
-            {
-                this.drkField = value;
-            }
-        }
+	/// <remarks />
+	public byte bot
+	{
+		get => botField;
+		set => botField = value;
+	}
 
-        /// <remarks/>
-        public byte top
-        {
-            get
-            {
-                return this.topField;
-            }
-            set
-            {
-                this.topField = value;
-            }
-        }
+	/// <remarks />
+	public object hotspots
+	{
+		get => hotspotsField;
+		set => hotspotsField = value;
+	}
+}
 
-        /// <remarks/>
-        public byte bot
-        {
-            get
-            {
-                return this.botField;
-            }
-            set
-            {
-                this.botField = value;
-            }
-        }
+/// <remarks />
+[GeneratedCode(tool: "xsd", version: "2.0.50727.3038")]
+[Serializable]
+[DebuggerStepThrough]
+[DesignerCategory(category: "code")]
+[XmlType(AnonymousType = true)]
+public class imagesTooltips
+{
+	private imagesTooltipsLoadMessage loadMessageField;
 
-        /// <remarks/>
-        public object hotspots
-        {
-            get
-            {
-                return this.hotspotsField;
-            }
-            set
-            {
-                this.hotspotsField = value;
-            }
-        }
-    }
+	private imagesTooltipsNextImage nextImageField;
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlType(AnonymousType = true)]
-    public partial class imagesTooltips
-    {
+	private imagesTooltipsPause pauseField;
 
-        private imagesTooltipsLoadMessage loadMessageField;
+	private imagesTooltipsPlay playField;
 
-        private imagesTooltipsPreviousImage previousImageField;
+	private imagesTooltipsPreviousImage previousImageField;
 
-        private imagesTooltipsNextImage nextImageField;
+	/// <remarks />
+	public imagesTooltipsLoadMessage loadMessage
+	{
+		get => loadMessageField;
+		set => loadMessageField = value;
+	}
 
-        private imagesTooltipsPlay playField;
+	/// <remarks />
+	public imagesTooltipsPreviousImage previousImage
+	{
+		get => previousImageField;
+		set => previousImageField = value;
+	}
 
-        private imagesTooltipsPause pauseField;
+	/// <remarks />
+	public imagesTooltipsNextImage nextImage
+	{
+		get => nextImageField;
+		set => nextImageField = value;
+	}
 
-        /// <remarks/>
-        public imagesTooltipsLoadMessage loadMessage
-        {
-            get
-            {
-                return this.loadMessageField;
-            }
-            set
-            {
-                this.loadMessageField = value;
-            }
-        }
+	/// <remarks />
+	public imagesTooltipsPlay play
+	{
+		get => playField;
+		set => playField = value;
+	}
 
-        /// <remarks/>
-        public imagesTooltipsPreviousImage previousImage
-        {
-            get
-            {
-                return this.previousImageField;
-            }
-            set
-            {
-                this.previousImageField = value;
-            }
-        }
+	/// <remarks />
+	public imagesTooltipsPause pause
+	{
+		get => pauseField;
+		set => pauseField = value;
+	}
+}
 
-        /// <remarks/>
-        public imagesTooltipsNextImage nextImage
-        {
-            get
-            {
-                return this.nextImageField;
-            }
-            set
-            {
-                this.nextImageField = value;
-            }
-        }
+/// <remarks />
+[GeneratedCode(tool: "xsd", version: "2.0.50727.3038")]
+[Serializable]
+[DebuggerStepThrough]
+[DesignerCategory(category: "code")]
+[XmlType(AnonymousType = true)]
+public class imagesTooltipsLoadMessage
+{
+	private string messageField;
 
-        /// <remarks/>
-        public imagesTooltipsPlay play
-        {
-            get
-            {
-                return this.playField;
-            }
-            set
-            {
-                this.playField = value;
-            }
-        }
+	/// <remarks />
+	public string message
+	{
+		get => messageField;
+		set => messageField = value;
+	}
+}
 
-        /// <remarks/>
-        public imagesTooltipsPause pause
-        {
-            get
-            {
-                return this.pauseField;
-            }
-            set
-            {
-                this.pauseField = value;
-            }
-        }
-    }
+/// <remarks />
+[GeneratedCode(tool: "xsd", version: "2.0.50727.3038")]
+[Serializable]
+[DebuggerStepThrough]
+[DesignerCategory(category: "code")]
+[XmlType(AnonymousType = true)]
+public class imagesTooltipsPreviousImage
+{
+	private string textField;
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlType(AnonymousType = true)]
-    public partial class imagesTooltipsLoadMessage
-    {
+	/// <remarks />
+	public string text
+	{
+		get => textField;
+		set => textField = value;
+	}
+}
 
-        private string messageField;
+/// <remarks />
+[GeneratedCode(tool: "xsd", version: "2.0.50727.3038")]
+[Serializable]
+[DebuggerStepThrough]
+[DesignerCategory(category: "code")]
+[XmlType(AnonymousType = true)]
+public class imagesTooltipsNextImage
+{
+	private string textField;
 
-        /// <remarks/>
-        public string message
-        {
-            get
-            {
-                return this.messageField;
-            }
-            set
-            {
-                this.messageField = value;
-            }
-        }
-    }
+	/// <remarks />
+	public string text
+	{
+		get => textField;
+		set => textField = value;
+	}
+}
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlType(AnonymousType = true)]
-    public partial class imagesTooltipsPreviousImage
-    {
+/// <remarks />
+[GeneratedCode(tool: "xsd", version: "2.0.50727.3038")]
+[Serializable]
+[DebuggerStepThrough]
+[DesignerCategory(category: "code")]
+[XmlType(AnonymousType = true)]
+public class imagesTooltipsPlay
+{
+	private string textField;
 
-        private string textField;
+	/// <remarks />
+	public string text
+	{
+		get => textField;
+		set => textField = value;
+	}
+}
 
-        /// <remarks/>
-        public string text
-        {
-            get
-            {
-                return this.textField;
-            }
-            set
-            {
-                this.textField = value;
-            }
-        }
-    }
+/// <remarks />
+[GeneratedCode(tool: "xsd", version: "2.0.50727.3038")]
+[Serializable]
+[DebuggerStepThrough]
+[DesignerCategory(category: "code")]
+[XmlType(AnonymousType = true)]
+public class imagesTooltipsPause
+{
+	private string textField;
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlType(AnonymousType = true)]
-    public partial class imagesTooltipsNextImage
-    {
-
-        private string textField;
-
-        /// <remarks/>
-        public string text
-        {
-            get
-            {
-                return this.textField;
-            }
-            set
-            {
-                this.textField = value;
-            }
-        }
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlType(AnonymousType = true)]
-    public partial class imagesTooltipsPlay
-    {
-
-        private string textField;
-
-        /// <remarks/>
-        public string text
-        {
-            get
-            {
-                return this.textField;
-            }
-            set
-            {
-                this.textField = value;
-            }
-        }
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [XmlType(AnonymousType = true)]
-    public partial class imagesTooltipsPause
-    {
-
-        private string textField;
-
-        /// <remarks/>
-        public string text
-        {
-            get
-            {
-                return this.textField;
-            }
-            set
-            {
-                this.textField = value;
-            }
-        }
-    }
+	/// <remarks />
+	public string text
+	{
+		get => textField;
+		set => textField = value;
+	}
 }

@@ -2,47 +2,41 @@
 using System.IO;
 using System.Net;
 
-namespace PersianBingCalendar.Utils
+namespace PersianBingCalendar.Utils;
+
+public static class Downloader
 {
-    public static class Downloader
-    {
-        public static readonly string UA = "PersianBingCalendar";
+	public const string UA = "PersianBingCalendar";
 
-        public static void DownloadFile(string url, string filePath)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                return;
-            }
+	public static void DownloadFile(string url, string filePath)
+	{
+		if (string.IsNullOrWhiteSpace(value: url))
+		{
+			return;
+		}
 
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.UserAgent = UA;
+		HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUriString: url);
+		request.UserAgent = UA;
 
-            request.AllowAutoRedirect = true;
-            request.KeepAlive = false;
+		request.AllowAutoRedirect = true;
+		request.KeepAlive         = false;
 
-            var timeout = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
-            request.Timeout = timeout;
-            request.ReadWriteTimeout = timeout;
+		int timeout = (int)TimeSpan.FromMinutes(value: 10).TotalMilliseconds;
+		request.Timeout          = timeout;
+		request.ReadWriteTimeout = timeout;
 
-            using (var webResponse = (HttpWebResponse)request.GetResponse())
-            {
-                using (var responseStream = webResponse.GetResponseStream())
-                {
-                    if (responseStream == null) return;
-                    using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        var buffer = new byte[8192];
-                        var bufLen = buffer.Length;
-                        int readSize;
-                        while ((readSize = responseStream.Read(buffer, 0, bufLen)) > 0)
-                        {
-                            fileStream.Write(buffer, 0, readSize);
-                            fileStream.Flush();
-                        }
-                    }
-                }
-            }
-        }
-    }
+		using HttpWebResponse webResponse    = (HttpWebResponse)request.GetResponse();
+		using Stream          responseStream = webResponse.GetResponseStream();
+		if (responseStream == null) return;
+		using FileStream fileStream = new(path: filePath, mode: FileMode.Create,
+			access: FileAccess.Write, share: FileShare.None);
+		byte[] buffer = new byte[8192];
+		int    bufLen = buffer.Length;
+		int    readSize;
+		while ((readSize = responseStream.Read(buffer: buffer, offset: 0, count: bufLen)) > 0)
+		{
+			fileStream.Write(array: buffer, offset: 0, count: readSize);
+			fileStream.Flush();
+		}
+	}
 }
