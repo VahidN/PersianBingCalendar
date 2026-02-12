@@ -4,90 +4,93 @@ using System.Windows.Forms;
 using Microsoft.Win32.TaskScheduler;
 using PersianBingCalendar.Utils;
 
-namespace PersianBingCalendar.Core
+namespace PersianBingCalendar.Core;
+
+public static class TaskRunner
 {
-    public static class TaskRunner
-    {
-        public static void CreateOrUpdateTask()
-        {
-            try
-            {
-                const string description = "PersianBingCalendar Runner";
-                var execAction = new ExecAction(Application.ExecutablePath, null, Application.StartupPath);
-                using (var task = TaskService.Instance.NewTask())
-                {
-                    var isVesrion2 = TaskService.Instance.HighestSupportedVersion >= new Version(1, 2);
+	public static void CreateOrUpdateTask()
+	{
+		try
+		{
+			const string description = "PersianBingCalendar Runner";
+			ExecAction execAction = new(path: Application.ExecutablePath, arguments: null,
+				workingDirectory: Application.StartupPath);
+			using (TaskDefinition task = TaskService.Instance.NewTask())
+			{
+				bool isVesrion2 = TaskService.Instance.HighestSupportedVersion >= new Version(major: 1, minor: 2);
 
-                    task.RegistrationInfo.Description = description;
-                    task.RegistrationInfo.Author = "DNT";
-                    task.Settings.Hidden = true; // Project -> Properties -> Application tab -> Output type -> `Windows Application`
-                    task.Settings.Enabled = true;
-                    task.Settings.DisallowStartIfOnBatteries = false;
-                    task.Settings.StopIfGoingOnBatteries = false;
-                    if (isVesrion2)
-                    {
-                        task.Settings.StartWhenAvailable = true;
-                        task.Settings.MultipleInstances = TaskInstancesPolicy.IgnoreNew;
-                    }
+				task.RegistrationInfo.Description = description;
+				task.RegistrationInfo.Author      = "DNT";
+				task.Settings.Hidden =
+					true; // Project -> Properties -> Application tab -> Output type -> `Windows Application`
+				task.Settings.Enabled                    = true;
+				task.Settings.DisallowStartIfOnBatteries = false;
+				task.Settings.StopIfGoingOnBatteries     = false;
+				if (isVesrion2)
+				{
+					task.Settings.StartWhenAvailable = true;
+					task.Settings.MultipleInstances  = TaskInstancesPolicy.IgnoreNew;
+				}
 
-                    var trigger1 = createHourlyTrigger();
-                    if (!isVesrion2)
-                    {
-                        trigger1.Repetition.Duration = TimeSpan.FromHours(1.1);
-                    }
-                    task.Triggers.Add(trigger1);
+				TimeTrigger trigger1 = createHourlyTrigger();
+				if (!isVesrion2)
+				{
+					trigger1.Repetition.Duration = TimeSpan.FromHours(value: 1.1);
+				}
 
-                    var trigger2 = createDailyStartTrigger();
-                    if (!isVesrion2)
-                    {
-                        trigger2.Repetition.Duration = TimeSpan.FromHours(1.1);
-                    }
-                    task.Triggers.Add(trigger2);
+				task.Triggers.Add(unboundTrigger: trigger1);
 
-                    task.Actions.Add(execAction);
-                    TaskService.Instance.RootFolder.RegisterTaskDefinition(
-                        description,
-                        task,
-                        TaskCreation.CreateOrUpdate,
-                        null,
-                        null,
-                        TaskLogonType.InteractiveToken,
-                        null);
-                }
-                Console.WriteLine($"`{description}` task has been added.");
-            }
-            catch (Exception ex)
-            {
-                ex.LogException();
-            }
-        }
+				TimeTrigger trigger2 = createDailyStartTrigger();
+				if (!isVesrion2)
+				{
+					trigger2.Repetition.Duration = TimeSpan.FromHours(value: 1.1);
+				}
 
-        public static void RunTask()
-        {
-            File.WriteAllText(Path.Combine(DirUtils.GetAppPath(), "last-run.log"), string.Format("{0}{1}{1}", DateTime.Now, Environment.NewLine));
-            BingImagesDownloader.DownloadTodayBingImages();
-            BingWallpaper.SetTodayWallpapaer();
-        }
+				task.Triggers.Add(unboundTrigger: trigger2);
 
-        private static TimeTrigger createHourlyTrigger()
-        {
-            return new TimeTrigger
-            {
-                StartBoundary = new DateTime(2017, 1, 1),
-                Repetition =
-                {
-                    Interval = TimeSpan.FromHours(1),
-                    StopAtDurationEnd = false
-                },
-                Enabled = true
-            };
-        }
+				task.Actions.Add(action: execAction);
+				TaskService.Instance.RootFolder.RegisterTaskDefinition(
+					path: description,
+					definition: task,
+					createType: TaskCreation.CreateOrUpdate,
+					userId: null,
+					password: null,
+					logonType: TaskLogonType.InteractiveToken);
+			}
 
-        private static TimeTrigger createDailyStartTrigger()
-        {
-            var tomorrow = DateTime.Now.AddDays(1);
-            var startOfADay = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 0, 0, 1);
-            return new TimeTrigger(startOfADay);
-        }
-    }
+			Console.WriteLine(value: $"`{description}` task has been added.");
+		}
+		catch (Exception ex)
+		{
+			ex.LogException();
+		}
+	}
+
+	public static void RunTask()
+	{
+		File.WriteAllText(path: Path.Combine(path1: DirUtils.GetAppPath(), path2: "last-run.log"),
+			contents: string.Format(format: "{0}{1}{1}", arg0: DateTime.Now, arg1: Environment.NewLine));
+		BingImagesDownloader.DownloadTodayBingImages();
+		BingWallpaper.SetTodayWallpapaer();
+	}
+
+	private static TimeTrigger createHourlyTrigger() =>
+		new()
+		{
+			StartBoundary = new(year: 2017, month: 1, day: 1),
+			Repetition =
+			{
+				Interval          = TimeSpan.FromHours(value: 1),
+				StopAtDurationEnd = false
+			},
+			Enabled = true
+		};
+
+	private static TimeTrigger createDailyStartTrigger()
+	{
+		DateTime tomorrow = DateTime.Now.AddDays(value: 1);
+		DateTime startOfADay = new(year: tomorrow.Year, month: tomorrow.Month, day: tomorrow.Day, hour: 0, minute: 0,
+			second: 1);
+		return new(startBoundary: startOfADay);
+	}
 }
