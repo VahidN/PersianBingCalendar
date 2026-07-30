@@ -29,18 +29,15 @@
         <ApplicationIcon>calendar_today.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-            <HintPath>..\packages\TaskScheduler.2.5.22\lib\net40\JetBrains.Annotations.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.5.22.0, Culture=neutral, PublicKeyToken=0d013ddd5178a2ae, processorArchitecture=MSIL">
-            <HintPath>..\packages\TaskScheduler.2.5.22\lib\net40\Microsoft.Win32.TaskScheduler.dll</HintPath>
-            <Private>True</Private>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="Microsoft.Win32.TaskScheduler, Version=2.12.2.0, Culture=neutral, PublicKeyToken=2806574b39b74d4b, processorArchitecture=MSIL">
+          <HintPath>..\packages\TaskScheduler.2.12.2\lib\net45\Microsoft.Win32.TaskScheduler.dll</HintPath>
         </Reference>
         <Reference Include="System"/>
         <Reference Include="System.configuration"/>
         <Reference Include="System.Core"/>
         <Reference Include="System.Drawing"/>
+        <Reference Include="System.IO.Compression" />
         <Reference Include="System.Web"/>
         <Reference Include="System.Windows.Forms"/>
         <Reference Include="System.Xml"/>
@@ -80,7 +77,7 @@
     </ItemGroup>
     <ItemGroup>
         <None Include="App.config"/>
-        <None Include="packages.config"/>
+        <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
         <Content Include="calendar_today.ico"/>
