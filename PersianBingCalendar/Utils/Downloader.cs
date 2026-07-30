@@ -8,6 +8,12 @@ namespace PersianBingCalendar.Utils
     {
         public static readonly string UA = "PersianBingCalendar";
 
+        static Downloader()
+        {
+            // GitHub (and most HTTPS hosts) require TLS 1.2; net40 enum lacks Tls12 (3072).
+            ServicePointManager.SecurityProtocol |= (SecurityProtocolType)3072;
+        }
+
         public static void DownloadFile(string url, string filePath)
         {
             if (string.IsNullOrWhiteSpace(url))
