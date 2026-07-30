@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using PersianBingCalendar.Models;
 using PersianBingCalendar.Utils;
-using System.Net.Http;
 
 namespace PersianBingCalendar.Core
 {
@@ -88,7 +88,7 @@ namespace PersianBingCalendar.Core
                 return imageName;
             }
 
-            var nameValueCollection = new Uri(imageInfo.Url).ParseQueryString();
+            var nameValueCollection = HttpUtility.ParseQueryString(new Uri(imageInfo.Url).Query);
             var id = nameValueCollection["id"];
             return string.IsNullOrWhiteSpace(id) ? imageName : id.CleanFileName();
         }

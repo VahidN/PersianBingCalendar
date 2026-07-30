@@ -65,6 +65,7 @@ namespace PersianBingCalendar.Core
         public static void RunTask()
         {
             File.WriteAllText(Path.Combine(DirUtils.GetAppPath(), "last-run.log"), string.Format("{0}{1}{1}", DateTime.Now, Environment.NewLine));
+            HolidaysUpdater.UpdateIfNeeded();
             BingImagesDownloader.DownloadTodayBingImages();
             BingWallpaper.SetTodayWallpapaer();
         }

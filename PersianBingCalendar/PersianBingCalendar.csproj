@@ -41,7 +41,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -50,6 +50,7 @@
     <Compile Include="Core\BingImagesDownloader.cs" />
     <Compile Include="Core\BingWallpaper.cs" />
     <Compile Include="Core\HolidaysReader.cs" />
+    <Compile Include="Core\HolidaysUpdater.cs" />
     <Compile Include="Core\PersianCalendarRenderer.cs" />
     <Compile Include="Core\TaskRunner.cs" />
     <Compile Include="Models\bing2.cs" />

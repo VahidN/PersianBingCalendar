@@ -46,4 +46,6 @@ PersianBingCalendar
 
 **دریافت مناسبت‌هاى به روز شده**
 
-همواره می‌توانید آخرین فایل مناسبت‌ها را از این آدرس دریافت کنید و سپس آن‌را جایگزین فایل Data\holidays.csv موجود و قدیمی نمائید: [holidays.csv](https://raw.githubusercontent.com/VahidN/PersianBingCalendar/master/PersianBingCalendar/bin/Release/Data/holidays.csv)
+برنامه در هر روز یکبار (در اولین اجرای همان روز) فایل مناسبت‌ها را از آدرس زیر بررسی می‌کند و در صورت تغییر، فایل `Data\holidays.csv` را به‌صورت خودکار جایگزین می‌کند: [holidays.csv](https://raw.githubusercontent.com/VahidN/PersianBingCalendar/master/PersianBingCalendar/bin/Release/Data/holidays.csv)
+
+در صورت نیاز همچنان می‌توانید همین فایل را به‌صورت دستی دریافت و جایگزین کنید.

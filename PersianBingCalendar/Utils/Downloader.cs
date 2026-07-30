@@ -15,6 +15,9 @@ namespace PersianBingCalendar.Utils
                 return;
             }
 
+            // GitHub (and most HTTPS hosts) require TLS 1.2; net40 enum lacks Tls12 (3072).
+            ServicePointManager.SecurityProtocol |= (SecurityProtocolType)3072;
+
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.UserAgent = UA;
 
