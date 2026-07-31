@@ -1,6 +1,10 @@
 name: .NET Core Build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   build:
@@ -8,36 +12,40 @@ jobs:
     runs-on: windows-2022
 
     steps:
-    - uses: actions/checkout@v7
-    - name: Setup .NET Core
+
+    - name: Checkout source
+      uses: actions/checkout@v7
+
+    - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 10.0.x        
+        dotnet-version: 10.0.x
 
     - name: Get current date
       id: date
-      run: echo "date=$(date +'%Y.%m.%d.%H.%M')" >> $GITHUB_OUTPUT
+      shell: bash
+      run: |
+        echo "date=$(date +'%Y.%m.%d.%H.%M')" >> "$GITHUB_OUTPUT"
 
-    - name: Publish the project
+    - name: Build project
       shell: bash
       run: |
         release_name="PersianBingCalendar-${{ steps.date.outputs.date }}"
 
-        # Build everything
-        dotnet build ./PersianBingCalendar/PersianBingCalendar.csproj -c Release -o ./PersianBingCalendar/bin/Release
+        echo "RELEASE_NAME=$release_name" >> "$GITHUB_ENV"
 
-        # Pack files
-        if [ "${{ matrix.target }}" == "win-x64" ]; then
-            7z a -tzip "${release_name}.zip" "./PersianBingCalendar/bin/Release/*"
-        else
-            zip -r "${release_name}.zip" . -i "./PersianBingCalendar/bin/Release/*" 
-        fi
+        dotnet build ./PersianBingCalendar/PersianBingCalendar.csproj \
+          -c Release \
+          -o ./PersianBingCalendar/bin/Release
 
-    - name: Create a release artifact
+        7z a -tzip "${release_name}.zip" ./PersianBingCalendar/bin/Release/*
+
+    - name: Create GitHub Release
       if: github.event_name == 'push'
       uses: softprops/action-gh-release@v3
       with:
-        tag_name: "Release_${{ steps.date.outputs.date }}"
-        files: "${release_name}.zip"
+        tag_name: Release_${{ github.run_number }}
+        name: Release ${{ steps.date.outputs.date }}
+        files: ${{ env.RELEASE_NAME }}.zip
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
