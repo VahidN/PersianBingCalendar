@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="LICENSE.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="PersianBingCalendar/PersianBingCalendar.csproj">
+    <BuildType Project="Release" />
+  </Project>
+</Solution>

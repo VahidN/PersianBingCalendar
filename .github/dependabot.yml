@@ -1,0 +1,23 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10
+  ignore:
+    - dependency-name: "Meziantou.Analyzer"  
+  groups:
+    tests:
+      patterns: ["*"]
+      update-types: ["minor", "patch"]
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10
+- package-ecosystem: dotnet-sdk
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10

@@ -1,0 +1,43 @@
+name: .NET Core Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: 10.0.x        
+
+    - name: Get current date
+      id: date
+      run: echo "date=$(date +'%Y.%m.%d.%H.%M')" >> $GITHUB_OUTPUT
+
+    - name: Publish the project
+      shell: bash
+      run: |
+        release_name="PersianBingCalendar-${{ steps.date.outputs.date }}"
+
+        # Build everything
+        dotnet build ./PersianBingCalendar/PersianBingCalendar.csproj -c Release -o ./PersianBingCalendar/bin/Release
+
+        # Pack files
+        if [ "${{ matrix.target }}" == "win-x64" ]; then
+            7z a -tzip "${release_name}.zip" "./PersianBingCalendar/bin/Release/*"
+        else
+            zip -r "${release_name}.zip" . -i "./PersianBingCalendar/bin/Release/*" 
+        fi
+
+    - name: Create a release artifact
+      if: github.event_name == 'push'
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: "Release_${{ steps.date.outputs.date }}"
+        files: "${release_name}.zip"
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
