@@ -1,24 +1,24 @@
-﻿using System.Windows.Forms;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
-namespace PersianBingCalendar.Utils
+namespace PersianBingCalendar.Utils;
+
+public static class RunOnWindowsStartup
 {
-    public static class RunOnWindowsStartup
+    private const string ProgramName = "PersianBingCalendar";
+
+    public static void Do()
     {
-        const string ProgramName = "PersianBingCalendar";
+        using var rkApp = Registry.CurrentUser.OpenSubKey(name: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            writable: true);
 
-        public static void Do()
-        {
-            var rkApp = Registry.CurrentUser.OpenSubKey(
-                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            rkApp?.SetValue(ProgramName, Application.ExecutablePath);
-        }
+        rkApp?.SetValue(ProgramName, Application.ExecutablePath);
+    }
 
-        public static void Undo()
-        {
-            var rkApp = Registry.CurrentUser.OpenSubKey(
-                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            rkApp?.DeleteValue(ProgramName, false);
-        }
+    public static void Undo()
+    {
+        using var rkApp = Registry.CurrentUser.OpenSubKey(name: "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+            writable: true);
+
+        rkApp?.DeleteValue(ProgramName, throwOnMissingValue: false);
     }
 }

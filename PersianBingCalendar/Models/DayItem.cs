@@ -1,8 +1,8 @@
-namespace PersianBingCalendar.Models
+namespace PersianBingCalendar.Models;
+
+public class DayItem
 {
-    public class DayItem
-    {
-        public string Day { set; get; }
-        public string Text { set; get; }
-    }
+    public string? Day { get; set; }
+
+    public string? Text { get; set; }
 }

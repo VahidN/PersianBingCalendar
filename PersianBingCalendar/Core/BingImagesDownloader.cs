@@ -1,36 +1,42 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
+using System.Web;
 using PersianBingCalendar.Models;
 using PersianBingCalendar.Utils;
-using System.Web;
 
-namespace PersianBingCalendar.Core
+namespace PersianBingCalendar.Core;
+
+public static class BingImagesDownloader
 {
-    public static class BingImagesDownloader
+    public static void DownloadTodayBingImages()
     {
-        public static void DownloadTodayBingImages()
+        if (!NetworkStatus.IsConnectedToInternet())
         {
-            if (!NetworkStatus.IsConnectedToInternet())
-            {
-                "The internet connection was not found.".LogText();
-                return;
-            }
+            "The internet connection was not found.".LogText();
 
-            var dir = DirUtils.GetImagesDir();
-            Enumerable.Range(start: 0, count: 9).AsParallel().ForAll(imageIndex =>
+            return;
+        }
+
+        var dir = DirUtils.GetImagesDir();
+
+        Enumerable.Range(start: 0, count: 9)
+            .AsParallel()
+            .ForAll(imageIndex =>
             {
                 try
                 {
-                    var source = $"http://www.bing.com/HPImageArchive.aspx?format=xml&idx={imageIndex}&n=1&mkt=en-US";
-                    downloadImage(source, dir, xml =>
+                    var source =
+                        FormattableString.Invariant(
+                            $"https://www.bing.com/HPImageArchive.aspx?format=xml&idx={imageIndex}&n=1&mkt=en-US");
+
+                    DownloadImage(source, dir, xml =>
                     {
                         var bingImage = xml.FromXmlContent<images>();
+
                         return new ImageInfo
                         {
-                            Url = $"http://www.bing.com{bingImage.image.url.Replace("_1366x768.jpg", "_1920x1080.jpg")}",
-                            Copyright = bingImage.image.copyright
+                            Url =
+                                $"https://www.bing.com{bingImage?.image?.url?.Replace(oldValue: "_1366x768.jpg", newValue: "_1920x1080.jpg")}",
+                            Copyright = bingImage?.image?.copyright
                         };
                     });
                 }
@@ -39,58 +45,61 @@ namespace PersianBingCalendar.Core
                     ex.LogException();
                 }
             });
-        }
+    }
 
-        private static void downloadImage(
-            string xmlUrl,
-            string dir,
-            Func<string, ImageInfo> getFullUrl)
+    private static void DownloadImage(string xmlUrl, string dir, Func<string, ImageInfo> getFullUrl)
+    {
+        string xmlData;
+        var timeout = TimeSpan.FromMinutes(value: 5);
+
+        using (var xmlClient = new MyWebClient())
         {
-            string xmlData;
-            var timeout = TimeSpan.FromMinutes(5);
-            using (var xmlClient = new MyWebClient { Timeout = timeout, Encoding = Encoding.UTF8 })
-            {
-                Console.WriteLine($"Downloading {xmlUrl}");
-                xmlData = xmlClient.DownloadString(xmlUrl);
-            }
-
-            var imageInfo = getFullUrl(xmlData);
-
-            var imageName = getImageName(imageInfo);
-            var imagePath = Path.Combine(dir, $"{imageName}");
-
-            var xmlFileName = imageName.Split('_').First();
-            var xmlFilePath = Path.Combine(dir, $"{xmlFileName}.xml");
-
-            if (File.Exists(xmlFilePath) && File.Exists(imagePath))
-            {
-                Console.WriteLine($"Already have it: {xmlFileName}");
-                return;
-            }
-            File.WriteAllText(xmlFilePath, xmlData);
-
-            try
-            {
-                Downloader.DownloadFile(imageInfo.Url, imagePath);
-            }
-            catch (Exception ex)
-            {
-                ex.LogException();
-                File.Delete(imagePath);
-            }
+            xmlClient.Timeout = timeout;
+            xmlClient.Encoding = Encoding.UTF8;
+            Console.WriteLine($"Downloading {xmlUrl}");
+            xmlData = xmlClient.DownloadString(xmlUrl);
         }
 
-        private static string getImageName(ImageInfo imageInfo)
+        var imageInfo = getFullUrl(xmlData);
+
+        var imageName = GetImageName(imageInfo);
+        var imagePath = Path.Combine(dir, $"{imageName}");
+
+        var xmlFileName = imageName.Split('_')[0];
+        var xmlFilePath = Path.Combine(dir, $"{xmlFileName}.xml");
+
+        if (File.Exists(xmlFilePath) && File.Exists(imagePath))
         {
-            var imageName = Path.GetFileName(imageInfo.Url).CleanFileName();
-            if (imageName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase))
-            {
-                return imageName;
-            }
+            Console.WriteLine($"Already have it: {xmlFileName}");
 
-            var nameValueCollection =  HttpUtility.ParseQueryString(new Uri(imageInfo.Url).Query);
-            var id = nameValueCollection["id"];
-            return string.IsNullOrWhiteSpace(id) ? imageName : id.CleanFileName();
+            return;
         }
+
+        File.WriteAllText(xmlFilePath, xmlData);
+
+        try
+        {
+            Downloader.DownloadFile(imageInfo.Url, imagePath);
+        }
+        catch (Exception ex)
+        {
+            ex.LogException();
+            File.Delete(imagePath);
+        }
+    }
+
+    private static string GetImageName(ImageInfo imageInfo)
+    {
+        var imageName = Path.GetFileName(imageInfo.Url).CleanFileName();
+
+        if (imageName.EndsWith(value: ".jpg", StringComparison.OrdinalIgnoreCase))
+        {
+            return imageName;
+        }
+
+        var nameValueCollection = HttpUtility.ParseQueryString(new Uri(imageInfo.Url).Query);
+        var id = nameValueCollection[name: "id"];
+
+        return string.IsNullOrWhiteSpace(id) ? imageName : id.CleanFileName();
     }
 }

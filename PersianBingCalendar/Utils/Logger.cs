@@ -1,26 +1,20 @@
-﻿using System;
-using System.IO;
+﻿namespace PersianBingCalendar.Utils;
 
-namespace PersianBingCalendar.Utils
+public static class Logger
 {
-    public static class Logger
+    private static readonly object Lock = new();
+
+    public static void LogException(this Exception? ex) => ex?.ToString().LogText();
+
+    public static void LogText(this string text)
     {
-        private static readonly object _lock = new object();
-
-        public static void LogException(this Exception ex)
+        lock (Lock)
         {
-            ex?.ToString().LogText();
-        }
+            Console.WriteLine(text);
 
-        public static void LogText(this string text)
-        {
-            lock (_lock)
-            {
-                Console.WriteLine(text);
-                File.AppendAllText(
-                    Path.Combine(DirUtils.GetAppPath(), "errors.log"),
-                    $"{DateTime.Now}{Environment.NewLine}{text}{Environment.NewLine}{Environment.NewLine}");
-            }
+            File.AppendAllText(Path.Combine(DirUtils.GetAppPath(), path2: "errors.log"),
+                FormattableString.Invariant(
+                    $"{DateTime.Now}{Environment.NewLine}{text}{Environment.NewLine}{Environment.NewLine}"));
         }
     }
 }

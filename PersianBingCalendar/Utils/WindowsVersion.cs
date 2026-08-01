@@ -1,17 +1,14 @@
-﻿using System;
+﻿namespace PersianBingCalendar.Utils;
 
-namespace PersianBingCalendar.Utils
+public static class WindowsVersion
 {
-    public static class WindowsVersion
+    public static bool IsWindows8Plus
     {
-        public static bool IsWindows8Plus
+        get
         {
-            get
-            {
-                var win8Version = new Version(6, 2, 9200, 0);
-                return Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                       Environment.OSVersion.Version >= win8Version;
-            }
+            var win8Version = new Version(major: 6, minor: 2, build: 9200, revision: 0);
+
+            return Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= win8Version;
         }
     }
 }

@@ -1,47 +1,58 @@
 ﻿using PersianBingCalendar.Utils;
 
-namespace PersianBingCalendar.Core
+namespace PersianBingCalendar.Core;
+
+public static class AppConfig
 {
-    public static class AppConfig
+    public static readonly string CalendarFontFileName;
+
+    public static readonly string CopyrightFontName;
+
+    public static readonly int CalendarFontSize;
+
+    public static readonly int CopyrightFontSize;
+
+    public static readonly int HolidaysFontSize;
+
+    public static readonly bool ShowPastHolidays;
+
+    public static readonly bool UseRandomImages;
+
+    public static readonly bool ShowCopyright;
+
+    static AppConfig()
     {
-        private static readonly int _calendarFontSize;
-
-        private static readonly int _copyrightFontSize;
-
-        private static readonly int _holidaysFontSize;
-
-        private static readonly bool _showPastHolidays;
-
-        private static readonly bool _useRandomImages;
-
-        private static readonly bool _showCopyright;
-
-        static AppConfig()
+        if (!bool.TryParse(ConfigSetGet.GetConfigData(key: "UseRandomImages"), out UseRandomImages))
         {
-            bool.TryParse(ConfigSetGet.GetConfigData("UseRandomImages"), out _useRandomImages);
-            bool.TryParse(ConfigSetGet.GetConfigData("ShowPastHolidays"), out _showPastHolidays);
-            int.TryParse(ConfigSetGet.GetConfigData("CalendarFontSize"), out _calendarFontSize);
-            int.TryParse(ConfigSetGet.GetConfigData("CopyrightFontSize"), out _copyrightFontSize);
-            int.TryParse(ConfigSetGet.GetConfigData("HolidaysFontSize"), out _holidaysFontSize);
-            CalendarFontFileName = ConfigSetGet.GetConfigData("CalendarFontFileName");
-            CopyrightFontName = ConfigSetGet.GetConfigData("CopyrightFontName");
-            bool.TryParse(ConfigSetGet.GetConfigData("ShowCopyright"), out _showCopyright);
+            UseRandomImages = true;
         }
 
-        public static string CalendarFontFileName { get; }
+        if (!bool.TryParse(ConfigSetGet.GetConfigData(key: "ShowPastHolidays"), out ShowPastHolidays))
+        {
+            ShowPastHolidays = false;
+        }
 
-        public static string CopyrightFontName { get; }
+        if (!int.TryParse(ConfigSetGet.GetConfigData(key: "CalendarFontSize"), out CalendarFontSize))
+        {
+            CalendarFontSize = 23;
+        }
 
-        public static int CalendarFontSize => _calendarFontSize;
+        if (!int.TryParse(ConfigSetGet.GetConfigData(key: "CopyrightFontSize"), out CopyrightFontSize))
+        {
+            CopyrightFontSize = 23;
+        }
 
-        public static int CopyrightFontSize => _copyrightFontSize;
+        if (!int.TryParse(ConfigSetGet.GetConfigData(key: "HolidaysFontSize"), out HolidaysFontSize))
+        {
+            HolidaysFontSize = 21;
+        }
 
-        public static int HolidaysFontSize => _holidaysFontSize;
+        CalendarFontFileName = ConfigSetGet.GetConfigData(key: "CalendarFontFileName");
+        CopyrightFontName = ConfigSetGet.GetConfigData(key: "CopyrightFontName");
 
-        public static bool ShowPastHolidays => _showPastHolidays;
-
-        public static bool UseRandomImages => _useRandomImages;
-
-        public static bool ShowCopyright => _showCopyright;
+        if (!bool.TryParse(ConfigSetGet.GetConfigData(key: "ShowCopyright"), out ShowCopyright))
+        {
+            ShowCopyright = true;
+        }
     }
 }

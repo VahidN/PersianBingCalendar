@@ -1,41 +1,20 @@
-﻿namespace PersianBingCalendar.Utils
+﻿namespace PersianBingCalendar.Utils;
+
+/// <summary>
+///     Default names of the Persian calendar.
+/// </summary>
+public static class PersianCalendarNames
 {
     /// <summary>
-    /// Default names of the Persian calendar.
+    ///     MonthNames in the Persian calendar.
     /// </summary>
-    public static class PersianCalendarNames
-    {
-        /// <summary>
-        /// MonthNames in the Persian calendar.
-        /// </summary>
-        public static readonly string[] MonthNames =
-            {
-            "فروردین" ,
-            "اردیبهشت" ,
-            "خرداد" ,
-            "تیر" ,
-            "مرداد" ,
-            "شهریور" ,
-            "مهر" ,
-            "آبان" ,
-            "آذر" ,
-            "دی" ,
-            "بهمن" ,
-            "اسفند"
-            };
+    public static readonly string[] MonthNames =
+    [
+        "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+    ];
 
-        /// <summary>
-        /// DaysOfWeek in the Persian calendar.
-        /// </summary>
-        public static readonly string[] DaysOfWeek =
-            {
-                "ش",
-                "ى",
-                "د",
-                "س",
-                "چ",
-                "پ",
-                "ج"
-            };
-    }
+    /// <summary>
+    ///     DaysOfWeek in the Persian calendar.
+    /// </summary>
+    public static readonly string[] DaysOfWeek = ["ش", "ى", "د", "س", "چ", "پ", "ج"];
 }
